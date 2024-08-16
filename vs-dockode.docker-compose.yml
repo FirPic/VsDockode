@@ -1,14 +1,12 @@
 services:
-  network:
-    dockode_net:
-      driver: bridge
-      ipam:
-        config:
-          - subnet: 10.0.0.1/8
-            gateway: 10.0.0.1
+  # networks:
+  #   net-dockode:
+  #     driver: bridge
+  #     ipam:
+  #       config:
+  #         - subnet: 10.0.0.1/8
+  #           gateway: 10.0.0.1
             
-
-
   code-server:
     image: lscr.io/linuxserver/code-server:4.91.1
     container_name: code-server
@@ -26,4 +24,24 @@ services:
       - /root/VsDockode/.code-server:/config
     ports:
       - 8443:8443
+    restart: unless-stopped
+
+
+  vscodium:
+    image: lscr.io/linuxserver/vscodium:1.92.2
+    container_name: vscodium
+    cap_add:
+      - IPC_LOCK
+    # security_opt:
+      # - seccomp:unconfined #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /root/VsDockode/.vscodium:/config
+    ports:
+      - 3000:3000
+      - 3001:3001
+    shm_size: "1gb"
     restart: unless-stopped
